@@ -1,0 +1,45 @@
+version: 2
+updates:
+  # Frontend dependencies
+  - package-ecosystem: "npm"
+    directory: "/web/frontend"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    versioning-strategy: auto
+    labels:
+      - "dependencies"
+      - "frontend"
+    reviewers:
+      - "cbwinslow"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore(dev)"
+      include: "scope"
+
+  # Backend dependencies
+  - package-ecosystem: "pip"
+    directory: "/web/backend"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "backend"
+    reviewers:
+      - "cbwinslow"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore(dev)"
+      include: "scope"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "ci"
+    reviewers:
+      - "cbwinslow"
