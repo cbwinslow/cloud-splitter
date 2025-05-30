@@ -123,4 +123,29 @@ cloud-splitter/
 ### TUI Application
 Configuration file location:
 - Linux/Mac: `~/.config/cloud-splitter/config.toml`
-- Windows: `%APPDATA%
+- Windows: `%APPDATA%## Security
+
+This project takes security seriously and implements several measures to maintain code security:
+
+### Automated Security Tools
+- Weekly dependency updates via Dependabot
+- Automated security scanning via GitHub Actions
+- CodeQL analysis for JavaScript and Python
+- Snyk vulnerability scanning
+- Regular npm audit and pip-audit checks
+
+### Security Documentation
+- Comprehensive security policy in SECURITY.md
+- Known issues tracking and mitigation strategies
+- Clear vulnerability reporting guidelines
+
+### Best Practices
+- Regular dependency updates
+- Production/development environment separation
+- Secure configuration management
+- Input validation
+- Proper error handling
+
+For more details, see [SECURITY.md](SECURITY.md).
+
+
