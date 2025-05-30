@@ -1,0 +1,169 @@
+@import 'variables';
+
+// Reset and base styles
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: $background-color;
+  color: $text-color;
+}
+
+// Matrix theme styles
+.matrix-background {
+  background-color: $matrix-black;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+// Container styles
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  
+  .app-header {
+    padding: 1rem;
+    background: rgba($matrix-black, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid $matrix-green;
+    
+    h1 {
+      color: $matrix-green;
+      font-size: 2rem;
+      text-align: center;
+      text-shadow: 0 0 10px rgba($matrix-green, 0.5);
+    }
+  }
+  
+  .app-main {
+    flex: 1;
+    padding: 2rem;
+    position: relative;
+  }
+  
+  .app-footer {
+    padding: 1rem;
+    text-align: center;
+    background: rgba($matrix-black, 0.8);
+    border-top: 1px solid $matrix-green;
+    color: $matrix-green;
+  }
+}
+
+// Audio visualization styles
+.visualization-container {
+  width: 100%;
+  height: 200px;
+  background: rgba($matrix-black, 0.6);
+  border: 1px solid $matrix-green;
+  border-radius: 4px;
+  margin: 1rem 0;
+  position: relative;
+  overflow: hidden;
+  
+  canvas {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Spectrum analyzer styles
+.spectrum-analyzer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 150px;
+  padding: 1rem;
+  background: rgba($matrix-black, 0.6);
+  border: 1px solid $matrix-green;
+  border-radius: 4px;
+  
+  .band {
+    width: 8%;
+    background: $matrix-green;
+    transition: height 0.1s ease;
+    box-shadow: 0 0 10px rgba($matrix-green, 0.5);
+  }
+}
+
+// Upload zone styles
+.upload-zone {
+  border: 2px dashed $matrix-green;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover, &.dragging {
+    background: rgba($matrix-green, 0.1);
+    border-color: lighten($matrix-green, 20%);
+  }
+}
+
+// Processing status styles
+.processing-status {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 4px;
+  background: rgba($matrix-black, 0.6);
+  border: 1px solid $matrix-green;
+  
+  .progress-bar {
+    height: 4px;
+    background: $matrix-green;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba($matrix-green, 0.5);
+  }
+}
+
+// Animation keyframes
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 5px rgba($matrix-green, 0.5); }
+  50% { box-shadow: 0 0 20px rgba($matrix-green, 0.8); }
+  100% { box-shadow: 0 0 5px rgba($matrix-green, 0.5); }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .app-container {
+    .app-header h1 {
+      font-size: 1.5rem;
+    }
+    
+    .app-main {
+      padding: 1rem;
+    }
+  }
+  
+  .spectrum-analyzer {
+    height: 100px;
+    
+    .band {
+      width: 6%;
+    }
+  }
+}
+
