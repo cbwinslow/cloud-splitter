@@ -1,0 +1,35 @@
+[paths]
+download_dir = "~/Downloads/cloud-splitter"
+output_dir = "~/Music/stems"
+
+[download]
+format = "bestaudio/best"
+keep_original = true
+batch_enabled = true
+
+[processing]
+separator = "demucs"
+stems = ["vocals", "drums", "bass", "other"]
+custom_labels = {}
+
+[metadata]
+enhance = true
+save_artwork = true
+apply_to_stems = true
+
+[apis]
+spotify_client_id = ""
+spotify_client_secret = ""
+youtube_api_key = ""
+
+[demucs]
+model = "htdemucs"
+cpu_only = false
+shifts = 2
+
+[spleeter]
+stems = 4
+
+[tui]
+theme = "dark"
+show_notifications = true

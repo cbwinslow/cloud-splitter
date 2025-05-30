@@ -1,0 +1,33 @@
+/* Add these styles to your existing CSS */
+
+/* Metadata View styling */
+MetadataView {
+    width: 100%;
+    height: 100%;
+    padding: 1;
+}
+
+#metadata-title {
+    text-align: center;
+    text-style: bold;
+    padding: 1;
+    border-bottom: solid $primary;
+}
+
+#settings-container {
+    margin: 1 0;
+    padding: 1;
+}
+
+#api-status-title {
+    margin-top: 1;
+    text-style: bold;
+}
+
+#api-status-table {
+    height: auto;
+    margin: 1 0;
+    border: solid $primary;
+}
+
+/* Update the existing styles as needed */

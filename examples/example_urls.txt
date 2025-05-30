@@ -1,0 +1,8 @@
+# Example URLs for batch processing
+# One URL per line, comments start with #
+
+https://www.youtube.com/watch?v=example1
+https://www.youtube.com/watch?v=example2
+https://www.youtube.com/watch?v=example3
+
+# Add more URLs below

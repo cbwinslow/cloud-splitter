@@ -1,0 +1,5 @@
+include README.md
+include LICENSE
+include requirements*.txt
+include src/cloud_splitter/tui/style.css
+include config/default.toml

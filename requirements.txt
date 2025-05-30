@@ -1,0 +1,10 @@
+# Previous requirements...
+
+# API Clients
+spotipy>=2.19.0
+google-api-python-client>=2.0.0
+
+# Metadata Handling
+mutagen>=1.45.0
+Pillow>=8.0.0
+requests>=2.26.0
