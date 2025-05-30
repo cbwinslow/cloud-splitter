@@ -1,8 +1,8 @@
 # FastAPI and Web Server
 fastapi==0.95.2
 uvicorn[standard]==0.21.1
-python-multipart==0.0.6
-pydantic==1.10.7
+python-multipart==0.0.18
+pydantic==1.10.13
 email-validator==2.0.0
 
 # Database
@@ -34,5 +34,5 @@ websockets==11.0.3
 python-socketio==5.8.0
 
 # Utilities
-requests==2.31.0
+requests==2.32.2
 pydub==0.25.1
