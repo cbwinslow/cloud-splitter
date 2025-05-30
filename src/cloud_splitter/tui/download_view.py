@@ -1,4 +1,4 @@
-from textual.widgets import Static, Input, Button, ListView, TextArea
+from textual.widgets import Static, Input, Button, ListView, TextArea, ListItem, Label
 from textual.containers import Container, Vertical, Horizontal
 from textual.reactive import reactive
 from textual.message import Message
@@ -9,6 +9,8 @@ import asyncio
 
 class DownloadView(Container):
     """Main view for URL input and processing control"""
+    
+    display = reactive(True)  # Add display control
     
     class URLAdded(Message):
         def __init__(self, url: str):
@@ -82,9 +84,20 @@ class DownloadView(Container):
             url = self.url_list[url_list.highlighted]
             self.url_list.pop(url_list.highlighted)
             self._refresh_url_list()
+            
+    def watch_display(self, value: bool) -> None:
+        """React to display changes"""
+        self.styles.display = "block" if value else "none"
 
     def _refresh_url_list(self) -> None:
+        """Refresh the URL list widget"""
         url_list = self.query_one("#url-list", ListView)
         url_list.clear()
         for url in self.url_list:
-            url_list.append(url)
+            # Create a ListItem with an ID that matches the URL for easier retrieval
+            list_item = ListItem(Label(url), id=f"url-{url}")
+            url_list.append(list_item)
+
+    def get_url_from_item(self, item: ListItem) -> str:
+        """Extract URL from a ListItem widget"""
+        return item.query_one(Label).render()

@@ -18,6 +18,14 @@ class ValidationError(CloudSplitterError):
     """Raised when validation fails."""
     pass
 
+class APIError(CloudSplitterError):
+    """Raised when an API request fails."""
+    pass
+
+class MetadataError(CloudSplitterError):
+    """Raised when there's an error handling metadata."""
+    pass
+
 class StemSeparationError(ProcessingError):
     """Raised when stem separation fails."""
     pass

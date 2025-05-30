@@ -28,7 +28,7 @@ class ConfigLoader:
                 with open(default_config_path, "rb") as f:
                     config_data = tomli.load(f)
             
-            return Config.parse_obj(config_data)
+            return Config.model_validate(config_data)
             
         except Exception as e:
             logger.error(f"Error loading configuration: {str(e)}")
@@ -44,7 +44,11 @@ class ConfigLoader:
             config_path.parent.mkdir(parents=True, exist_ok=True)
             
             with open(config_path, "wb") as f:
-                tomli_w.dump(config.dict(), f)
+                config_dict = config.model_dump()
+                # Convert Path objects to strings
+                config_dict["paths"]["download_dir"] = str(config.paths.download_dir)
+                config_dict["paths"]["output_dir"] = str(config.paths.output_dir)
+                tomli_w.dump(config_dict, f)
             
             logger.info(f"Configuration saved to {config_path}")
             

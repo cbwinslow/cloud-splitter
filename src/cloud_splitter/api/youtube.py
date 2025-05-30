@@ -2,7 +2,7 @@
 YouTube API integration for fetching video metadata
 """
 import os
-from typing import Optional, Dict, Any
+from typing import Dict, Any, Optional, List
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from cloud_splitter.utils.logging import get_logger

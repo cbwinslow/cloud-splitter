@@ -1,10 +1,15 @@
 """
 Metadata configuration and status view
 """
+from typing import Dict, Any
+import sys
+
+from textual.app import ComposeResult
 from textual.widgets import Static, Switch, DataTable, Button
 from textual.containers import Container, Vertical, Horizontal
 from textual.reactive import reactive
-from typing import Dict, Any
+from textual.binding import Binding
+
 from cloud_splitter.core.metadata_enhancer import MetadataEnhancer
 from cloud_splitter.utils.logging import get_logger
 
@@ -13,35 +18,56 @@ logger = get_logger()
 class MetadataView(Container):
     """View for configuring and monitoring metadata enhancement"""
     
-    def compose(self):
-        with Vertical():
-            yield Static("Metadata Enhancement Settings", id="metadata-title")
+    # Class variables
+    BINDINGS = [
+        Binding("s", "save", "Save Settings", show=True),
+        Binding("t", "test_apis", "Test APIs", show=True),
+    ]
+    
+    # Reactive properties
+    display = reactive(False)
+    is_loading = reactive(False)
+    def compose(self) -> ComposeResult:
+        """Create child widgets for the metadata view."""
+        with Vertical(id="metadata-container"):
+            yield Static("Metadata Enhancement Settings", id="metadata-title", classes="title")
             
             with Container(id="settings-container"):
-                yield Switch("Enable Metadata Enhancement", id="enhance-switch", value=True)
-                yield Switch("Save Album Artwork", id="artwork-switch", value=True)
-                yield Switch("Apply to Stem Files", id="stems-switch", value=True)
+                with Horizontal():
+                    yield Static("Enable Metadata Enhancement", classes="setting-label")
+                    yield Switch(id="enhance-switch", value=True)
+                with Horizontal():
+                    yield Static("Save Album Artwork", classes="setting-label")
+                    yield Switch(id="artwork-switch", value=True)
+                with Horizontal():
+                    yield Static("Apply to Stem Files", classes="setting-label")
+                    yield Switch(id="stems-switch", value=True)
             
-            yield Static("API Status", id="api-status-title")
+            yield Static("API Status", id="api-status-title", classes="title")
             yield DataTable(id="api-status-table")
             
-            with Horizontal():
+            with Horizontal(classes="button-container"):
                 yield Button("Test APIs", id="test-apis-btn", variant="primary")
                 yield Button("Configure APIs", id="config-apis-btn", variant="default")
 
-    def on_mount(self):
+    def on_mount(self) -> None:
         """Initialize the view"""
+        # Set default values for switches
+        self.query_one("#enhance-switch", Switch).value = True
+        self.query_one("#artwork-switch", Switch).value = True
+        self.query_one("#stems-switch", Switch).value = True
+        
+        # Initialize other components
         self.setup_table()
         self.load_settings()
-        self.update_api_status()
 
-    def setup_table(self):
+    def setup_table(self) -> None:
         """Set up the API status table"""
         table = self.query_one("#api-status-table", DataTable)
         table.add_columns("API", "Status", "Details")
         self.refresh_table()
 
-    def refresh_table(self):
+    def refresh_table(self) -> None:
         """Refresh the API status table"""
         table = self.query_one("#api-status-table", DataTable)
         table.clear()
@@ -93,39 +119,63 @@ class MetadataView(Container):
                 'details': str(e)
             }
 
-    def load_settings(self):
+    def load_settings(self) -> None:
         """Load settings from configuration"""
-        config = self.app.config
-        metadata_config = config.get('metadata', {})
-        
-        self.query_one("#enhance-switch", Switch).value = metadata_config.get('enhance', True)
-        self.query_one("#artwork-switch", Switch).value = metadata_config.get('save_artwork', True)
-        self.query_one("#stems-switch", Switch).value = metadata_config.get('apply_to_stems', True)
+        try:
+            # Default values for switches
+            self.query_one("#enhance-switch", Switch).value = True
+            self.query_one("#artwork-switch", Switch).value = True
+            self.query_one("#stems-switch", Switch).value = True
+            
+            # If there's a config, override with its values
+            if hasattr(self.app.config, 'metadata'):
+                metadata = self.app.config.metadata
+                if hasattr(metadata, 'enhance'):
+                    self.query_one("#enhance-switch", Switch).value = metadata.enhance
+                if hasattr(metadata, 'save_artwork'):
+                    self.query_one("#artwork-switch", Switch).value = metadata.save_artwork
+                if hasattr(metadata, 'apply_to_stems'):
+                    self.query_one("#stems-switch", Switch).value = metadata.apply_to_stems
+        except Exception as e:
+            logger.error(f"Error loading metadata settings: {str(e)}")
 
-    def save_settings(self):
+    def save_settings(self) -> None:
         """Save settings to configuration"""
-        config = self.app.config
-        if 'metadata' not in config:
-            config['metadata'] = {}
-        
-        config['metadata']['enhance'] = self.query_one("#enhance-switch", Switch).value
-        config['metadata']['save_artwork'] = self.query_one("#artwork-switch", Switch).value
-        config['metadata']['apply_to_stems'] = self.query_one("#stems-switch", Switch).value
-        
-        self.app.save_config()
+        try:
+            # Create metadata config if it doesn't exist
+            if not hasattr(self.app.config, 'metadata'):
+                from pydantic import create_model
+                MetadataConfig = create_model('MetadataConfig', 
+                    enhance=(bool, True),
+                    save_artwork=(bool, True),
+                    apply_to_stems=(bool, True)
+                )
+                self.app.config.metadata = MetadataConfig()
+            
+            # Update values
+            self.app.config.metadata.enhance = self.query_one("#enhance-switch", Switch).value
+            self.app.config.metadata.save_artwork = self.query_one("#artwork-switch", Switch).value
+            self.app.config.metadata.apply_to_stems = self.query_one("#stems-switch", Switch).value
+            
+            self.app.save_config()
+        except Exception as e:
+            logger.error(f"Error saving metadata settings: {str(e)}")
+            self.app.notify("Failed to save settings", severity="error")
 
-    async def on_button_pressed(self, event: Button.Pressed):
+    async def on_button_pressed(self, event: Button.Pressed) -> None:
         """Handle button presses"""
         if event.button.id == "test-apis-btn":
             await self.test_apis()
         elif event.button.id == "config-apis-btn":
             self.configure_apis()
 
-    async def test_apis(self):
+    async def test_apis(self) -> None:
         """Test API connections"""
-        self.app.push_screen("loading", "Testing API connections...")
-        self.refresh_table()
-        self.app.pop_screen()
+        self.is_loading = True
+        try:
+            self.app.push_screen("loading", "Testing API connections...")
+            self.refresh_table()
+            self.app.pop_screen()
         
         if all([
             self.check_spotify_status()['connected'],
@@ -134,8 +184,13 @@ class MetadataView(Container):
             self.app.notify("API connections successful", severity="success")
         else:
             self.app.notify("Some API connections failed", severity="error")
+        except Exception as e:
+            logger.error(f"Error during API testing: {str(e)}")
+            self.app.notify("API testing failed", severity="error")
+        finally:
+            self.is_loading = False
 
-    def configure_apis(self):
+    def configure_apis(self) -> None:
         """Launch API configuration"""
         import subprocess
         try:
@@ -144,3 +199,21 @@ class MetadataView(Container):
             self.refresh_table()
         except subprocess.CalledProcessError:
             self.app.notify("API configuration failed", severity="error")
+
+    def watch_display(self, value: bool) -> None:
+        """React to display changes"""
+        if value:
+            self.styles.display = "block"
+            self.load_settings()  # Refresh settings when view becomes visible
+            self.refresh_table()  # Refresh API status when view becomes visible
+        else:
+            self.styles.display = "none"
+            
+    def watch_is_loading(self, value: bool) -> None:
+        """React to loading state changes"""
+        if value:
+            self.query_one("#test-apis-btn").disabled = True
+            self.query_one("#config-apis-btn").disabled = True
+        else:
+            self.query_one("#test-apis-btn").disabled = False
+            self.query_one("#config-apis-btn").disabled = False

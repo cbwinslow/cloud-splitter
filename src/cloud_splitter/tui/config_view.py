@@ -11,6 +11,7 @@ from cloud_splitter.exceptions import ConfigurationError
 class ConfigView(Container):
     """Configuration management view"""
     
+    display = reactive(False)
     config: reactive[Dict[str, Any]] = reactive({})
     
     def compose(self):
@@ -26,7 +27,9 @@ class ConfigView(Container):
             # Download Options
             with Container(id="download-section"):
                 yield Static("Download Settings")
-                yield Switch("Keep Original Files", id="keep-original", value=True)
+                with Horizontal():
+                    yield Static("Keep Original Files")
+                    yield Switch(id="keep-original")
                 yield Select(
                     [
                         ("Best Audio/Video Quality", "bestaudio/best"),
@@ -46,15 +49,25 @@ class ConfigView(Container):
                 
                 yield Static("Stem Types")
                 with Grid(id="stem-grid"):
-                    yield Switch("Vocals", id="stem-vocals", value=True)
-                    yield Switch("Drums", id="stem-drums", value=True)
-                    yield Switch("Bass", id="stem-bass", value=True)
-                    yield Switch("Other", id="stem-other", value=True)
+                    with Horizontal():
+                        yield Static("Vocals")
+                        yield Switch(id="stem-vocals")
+                    with Horizontal():
+                        yield Static("Drums")
+                        yield Switch(id="stem-drums")
+                    with Horizontal():
+                        yield Static("Bass")
+                        yield Switch(id="stem-bass")
+                    with Horizontal():
+                        yield Static("Other")
+                        yield Switch(id="stem-other")
             
             # Advanced Options
             with Container(id="advanced-section"):
                 yield Static("Advanced Settings")
-                yield Switch("CPU Only", id="cpu-only", value=False)
+                with Horizontal():
+                    yield Static("CPU Only")
+                    yield Switch(id="cpu-only")
                 yield Select(
                     [("2", "2"), ("4", "4"), ("6", "6")],
                     id="shifts-select",
@@ -67,6 +80,16 @@ class ConfigView(Container):
                 yield Button("Reset to Defaults", id="reset-btn", variant="warning")
 
     def on_mount(self) -> None:
+        """Handle initial setup after mounting"""
+        # Set default values for switches
+        self.query_one("#keep-original", Switch).value = True
+        self.query_one("#stem-vocals", Switch).value = True
+        self.query_one("#stem-drums", Switch).value = True
+        self.query_one("#stem-bass", Switch).value = True
+        self.query_one("#stem-other", Switch).value = True
+        self.query_one("#cpu-only", Switch).value = False
+        
+        # Load configuration
         self.load_config()
 
     def load_config(self) -> None:
@@ -159,3 +182,7 @@ class ConfigView(Container):
             self.notify("Configuration reset to defaults", severity="information")
         except Exception as e:
             self.notify(f"Error resetting configuration: {str(e)}", severity="error")
+
+    def watch_display(self, value: bool) -> None:
+        """React to display changes"""
+        self.styles.display = "block" if value else "none"

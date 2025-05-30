@@ -1,5 +1,73 @@
 # Cloud Splitter
 
+## Service Management
+
+The project includes a comprehensive management script (`scripts/manage.sh`) to help with Docker service operations and monitoring. Here's how to use it:
+
+### Basic Usage
+
+```bash
+# Make the script executable
+chmod +x scripts/manage.sh
+
+# Start all services
+./scripts/manage.sh start
+
+# Stop all services
+./scripts/manage.sh stop
+
+# Restart all services
+./scripts/manage.sh restart
+
+# Check service status
+./scripts/manage.sh status
+```
+
+### Monitoring and Logs
+
+```bash
+# Monitor service status and resource usage
+./scripts/manage.sh monitor
+
+# View logs for a specific service
+./scripts/manage.sh logs backend    # Last 100 lines
+./scripts/manage.sh logs frontend 200  # Last 200 lines
+```
+
+### Database Management
+
+```bash
+# Initialize database and run migrations
+./scripts/manage.sh init-db
+```
+
+### Additional Features
+
+- Automatic environment validation
+- Service health checking
+- Colored logging with timestamps
+- Resource usage monitoring
+- Database migration support
+
+### Requirements
+
+- Docker
+- Docker Compose
+- Bash shell
+
+### Logs
+
+Logs are stored in the `logs/` directory:
+- Service logs are handled by Docker Compose
+- Management script logs are stored in `logs/manage.log`
+
+For more information about available commands:
+```bash
+./scripts/manage.sh help
+```
+
+# Cloud Splitter
+
 A comprehensive audio processing toolkit featuring both a modern web interface and a TUI-based tool for downloading, processing, and visualizing audio stems from videos.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

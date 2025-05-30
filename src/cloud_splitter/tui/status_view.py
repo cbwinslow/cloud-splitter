@@ -7,6 +7,7 @@ from cloud_splitter.utils.queue import QueueItem
 from cloud_splitter.utils.status import ProcessStatus
 
 class StatusView(Container):
+    display = reactive(False)
     queue_items: reactive[List[QueueItem]] = reactive([])
     current_status: reactive[ProcessStatus] = reactive(None)
     
@@ -49,6 +50,10 @@ class StatusView(Container):
                 duration,
                 item.error or ""
             )
+
+    def watch_display(self, value: bool) -> None:
+        """React to display changes"""
+        self.styles.display = "block" if value else "none"
 
     def update_queue(self, items: List[QueueItem]) -> None:
         self.queue_items = items

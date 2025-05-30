@@ -1,16 +1,26 @@
-import React, { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 import Head from 'next/head';
-import { Box, Container, AppBar, Toolbar, Typography, useScrollTrigger, Fade } from '@mui/material';
-import { ThemeProvider, CssBaseline, styled } from '@mui/material/styles';
+import {
+  AppBar,
+  Box,
+  Container,
+  CssBaseline,
+  Fade,
+  Toolbar,
+  Typography,
+  useScrollTrigger,
+} from '@mui/material';
+import { ThemeProvider, styled } from '@mui/material/styles';
 import { theme, animations } from '@/styles/theme';
 
+// Types
 interface LayoutProps {
   children: ReactNode;
   title?: string;
   description?: string;
 }
 
-// Styled components
+// Styled Components
 const StyledMain = styled('main')(({ theme }) => ({
   minHeight: '100vh',
   display: 'flex',
@@ -71,18 +81,18 @@ const Footer = styled('footer')(({ theme }) => ({
   color: theme.palette.primary.main,
 }));
 
-const Layout: React.FC<LayoutProps> = ({
+const Layout = ({
   children,
   title = 'Cloud Splitter - Audio Processing & Visualization',
   description = 'Advanced audio processing and visualization with real-time spectrum analysis',
-}) => {
+}: LayoutProps): JSX.Element => {
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
   });
 
-  // Load matrix font
   useEffect(() => {
+    // Load Matrix theme font
     const loadFont = async () => {
       const font = new FontFace(
         'Share Tech Mono',
@@ -101,6 +111,7 @@ const Layout: React.FC<LayoutProps> = ({
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+        <meta charSet="utf-8" />
         <link rel="icon" href="/favicon.ico" />
         <meta name="theme-color" content="#000000" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -167,49 +178,6 @@ const Layout: React.FC<LayoutProps> = ({
         </Footer>
       </StyledMain>
     </ThemeProvider>
-  );
-};
-
-export default Layout;
-
-import React, { ReactNode } from 'react';
-import Head from 'next/head';
-import { ThemeProvider, CssBaseline } from '@mui/material';
-import { theme } from '@/styles/theme';
-
-interface LayoutProps {
-  children: ReactNode;
-  title?: string;
-}
-
-const Layout: React.FC<LayoutProps> = ({ 
-  children, 
-  title = 'Cloud Splitter - Audio Processing'
-}) => {
-  return (
-    <>
-      <Head>
-        <title>{title}</title>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-        <meta name="description" content="Advanced audio processing and visualization" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <div className="app-container">
-          <header className="app-header">
-            <h1>{title}</h1>
-          </header>
-          <main className="app-main">
-            {children}
-          </main>
-          <footer className="app-footer">
-            <p>© {new Date().getFullYear()} Cloud Splitter</p>
-          </footer>
-        </div>
-      </ThemeProvider>
-    </>
   );
 };
 

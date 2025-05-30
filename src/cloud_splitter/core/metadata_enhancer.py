@@ -101,7 +101,7 @@ class MetadataEnhancer:
         # Common patterns for title formats
         patterns = [
             r'^(.+?)\s*[-–]\s*(.+)$',  # Artist - Title
-            r'^(.+?)\s*["'"]\s*(.+)\s*["'"]$',  # Artist "Title"
+            r'^(.+?)[\s]*["\'][\s]*(.+)[\s]*["\']$',  # Artist "Title"
             r'^(.+?)\s*:\s*(.+)$',  # Artist: Title
         ]
         

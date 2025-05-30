@@ -1,5 +1,7 @@
-import pytest
+from typing import Dict
+from dataclasses import dataclass
 from pathlib import Path
+import pytest
 from cloud_splitter.core.workflow import ProcessingWorkflow
 from cloud_splitter.core.config_loader import ConfigLoader
 from cloud_splitter.exceptions import ProcessingError
@@ -47,8 +49,32 @@ async def test_queue_processing(workflow):
     await workflow.add_urls(urls)
     
     # Mock processing to avoid actual downloads
-    workflow.downloader.download = lambda url: {"file_path": Path("test.wav")}
-    workflow.processor.process_file = lambda path: {"stems": {"vocals": Path("vocals.wav")}}
+    @dataclass
+    class DownloadResult:
+        file_path: Path
+        title: str
+        artist: str
+    
+    @dataclass
+    class ProcessResult:
+        output_dir: Path
+        stems: Dict[str, Path]
+    
+    async def mock_download(url):
+        return DownloadResult(
+            file_path=Path("test.wav"),
+            title="Test Song",
+            artist="Test Artist"
+        )
+        
+    async def mock_process(file_path):
+        return ProcessResult(
+            output_dir=Path("output"),
+            stems={"vocals": Path("vocals.wav")}
+        )
+        
+    workflow.downloader.download = mock_download
+    workflow.processor.process_file = mock_process
     
     # Process queue
     results = await workflow.process_queue()

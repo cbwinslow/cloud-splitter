@@ -28,6 +28,13 @@ class TUIConfig(BaseModel):
     theme: str = "dark"
     show_notifications: bool = True
 
+
+class MetadataConfig(BaseModel):
+    enhance: bool = True
+    save_artwork: bool = True
+    apply_to_stems: bool = True
+
+
 class Config(BaseModel):
     paths: PathConfig = PathConfig()
     download: DownloadConfig = DownloadConfig()
@@ -35,8 +42,18 @@ class Config(BaseModel):
     demucs: DemucsConfig = DemucsConfig()
     spleeter: SpleeterConfig = SpleeterConfig()
     tui: TUIConfig = TUIConfig()
+    metadata: MetadataConfig = MetadataConfig()
 
     @classmethod
-    def load(cls, config_path: Optional[Path] = None):
-        # TODO: Implement config loading from file
+    def load(cls, config_path: Optional[Path] = None) -> 'Config':
+        """Load configuration from file or create default"""
+        if config_path is None:
+            config_path = Path.home() / ".config" / "cloud-splitter" / "config.toml"
+
+        if config_path.exists():
+            import tomli
+            with open(config_path, "rb") as f:
+                config_data = tomli.load(f)
+                return cls.model_validate(config_data)
+        
         return cls()

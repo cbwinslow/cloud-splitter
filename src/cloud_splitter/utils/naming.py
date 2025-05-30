@@ -16,7 +16,7 @@ class FileNaming:
         # Common patterns for artist - title separation
         patterns = [
             r'^(.+?)\s*[-–]\s*(.+)$',  # Artist - Title
-            r'^(.+?)\s*["'"]\s*(.+)\s*["'"]$',  # Artist "Title"
+            r'^(.+?)\s*["\']\s*(.+)\s*["\']$',  # Artist "Title"
             r'^(.+?)\s*:\s*(.+)$',  # Artist: Title
         ]
         
@@ -32,9 +32,9 @@ class FileNaming:
     def deduplicate_artist(artist: str, title: str) -> Tuple[str, str]:
         if artist and artist.lower() in title.lower():
             # Remove artist name from title if it appears at the start
-            title_clean = re.sub(f'^{re.escape(artist)}\s*[-–:]\s*', '', title, flags=re.IGNORECASE)
+            title_clean = re.sub(rf'^{re.escape(artist)}\s*[-–:]\s*', '', title, flags=re.IGNORECASE)
             # Remove artist name from title if it appears in parentheses
-            title_clean = re.sub(f'\s*[({\[]\s*{re.escape(artist)}\s*[)}\]]\s*', '', title_clean, flags=re.IGNORECASE)
+            title_clean = re.sub(fr'\s*[\[(]\s*{re.escape(artist)}\s*[\])]\s*', '', title_clean, flags=re.IGNORECASE)
             return artist, title_clean
         return artist, title
 
