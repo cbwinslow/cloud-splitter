@@ -31,7 +31,7 @@
     "@mui/system": "5.14.18",
     "framer-motion": "10.12.16",
     "lodash": "4.17.21",
-    "date-fns": "2.30.0",
+    "date-fns": "4.1.0",
     "uuid": "9.0.0"
   },
   "devDependencies": {
