@@ -48,12 +48,12 @@ jobs:
         pip-audit
 
     - name: Run CodeQL Analysis
-      uses: github/codeql-action/init@v2
+      uses: github/codeql-action/init@v3
       with:
         languages: javascript, python
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      uses: github/codeql-action/analyze@v3
 
     - name: Run Snyk to check for vulnerabilities
       uses: snyk/actions/node@master
@@ -63,6 +63,6 @@ jobs:
         args: --all-projects
 
     - name: Upload security scan results
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: security-results.sarif
