@@ -1,7 +1,7 @@
 # FastAPI and Web Server
 fastapi==0.95.2
 uvicorn[standard]==0.21.1
-python-multipart==0.0.6
+python-multipart==0.0.20
 pydantic==1.10.7
 email-validator==2.0.0
 
