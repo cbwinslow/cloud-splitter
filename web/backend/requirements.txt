@@ -8,7 +8,7 @@ email-validator==2.0.0
 # Database
 SQLAlchemy==1.4.50
 psycopg2-binary==2.9.9
-alembic==1.11.3
+alembic==1.16.1
 databases[postgresql]==0.8.0
 
 # Audio Processing
