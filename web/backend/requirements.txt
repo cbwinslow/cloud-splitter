@@ -31,7 +31,7 @@ bcrypt==4.0.1
 
 # WebSocket
 websockets==11.0.3
-python-socketio==5.8.0
+python-socketio==5.13.0
 
 # Utilities
 requests==2.31.0
