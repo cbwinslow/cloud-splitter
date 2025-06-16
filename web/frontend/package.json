@@ -43,7 +43,7 @@
     "@types/lodash": "4.14.201",
     "@types/jest": "29.5.10",
     "@types/react-dropzone": "5.1.0",
-    "@typescript-eslint/eslint-plugin": "6.11.0",
+    "@typescript-eslint/eslint-plugin": "8.34.0",
     "@typescript-eslint/parser": "6.11.0",
     "@testing-library/react": "14.1.2",
     "@testing-library/jest-dom": "6.1.4",
